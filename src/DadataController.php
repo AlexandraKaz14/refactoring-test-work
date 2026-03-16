@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Classes\Dadata;
+use App\Services\Dadata;
 
 class DadataController
 {

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Classes\Dadata;
+use App\Services\Dadata;
 use App\Contracts\HttpClientInterface;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
