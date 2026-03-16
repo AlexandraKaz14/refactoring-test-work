@@ -95,7 +95,7 @@ class DadataTest extends TestCase
         $this->assertContains('Россия', $result);
     }
 
-    public function testSearchCountryReturnsNullWhenNoSuggestions(): void
+    public function testSearchCountryReturnsEmptyArrayWhenNoSuggestions(): void
     {
         $this->httpClient->expects($this->once())
             ->method('post')
@@ -103,7 +103,8 @@ class DadataTest extends TestCase
 
         $result = $this->dadata->searchCountry('xyz');
 
-        $this->assertNull($result);
+        $this->assertIsArray($result);
+        $this->assertEmpty($result);
     }
 
     public function testSearchAddressReturnsArray(): void
@@ -124,7 +125,7 @@ class DadataTest extends TestCase
         $this->assertContains('г Москва, ул Ленина, д 1', $result);
     }
 
-    public function testSearchAddressReturnsNullWhenNoSuggestions(): void
+    public function testSearchAddressReturnsEmptyArrayWhenNoSuggestions(): void
     {
         $this->httpClient->expects($this->once())
             ->method('post')
@@ -132,7 +133,8 @@ class DadataTest extends TestCase
 
         $result = $this->dadata->searchAddress('xyzxyzxyz');
 
-        $this->assertNull($result);
+        $this->assertIsArray($result);
+        $this->assertEmpty($result);
     }
 
     public function testSearchAddressPassesLocations(): void

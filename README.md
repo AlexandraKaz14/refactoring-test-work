@@ -7,12 +7,16 @@
 - Исправлен нерабочий код, добавлены namespace и PSR-4 автозагрузка
 - Внедрены `DadataInterface` и `HttpClientInterface` — зависимости от абстракций, а не реализаций
 - Убраны зависимости от Laravel-хелперов (`config()`)
-- API-ключ вынесен в `.env`
+- API-ключ вынесен в `.env`; при отсутствии ключа приложение падает явно при старте
 - Инициализация зависимостей вынесена в `bootstrap.php`
 - Добавлена валидация входящего параметра `query`
+- Добавлена обработка ошибок HTTP-клиента: `HttpException` перехватывается в `index.php` и возвращается как JSON с кодом 502
 - Поднят Docker-контейнер с PHP 8.4
-- Добавлена обработка ошибок HTTP-клиента с выбросом `HttpException`
-- Написаны юнит-тесты (15 тестов, 42 assertions)
+- Исправлена передача `locations: null` в тело запроса — ключ добавляется только если значение передано
+- Добавлена проверка результата `json_encode` и `json_decode` с явными ошибками
+- Методы поиска теперь возвращают `array` вместо `?array` — пустой результат это `[]`, не `null`
+- Интеграционные тесты отделены от юнит-тестов (`tests/Integration/`)
+- Написаны юнит-тесты (13 тестов, 40 assertions) + 2 интеграционных теста
 
 ## Структура проекта
 
@@ -33,9 +37,10 @@ public/
   index.php
 tests/
   Unit/
-    CurlHttpClientTest.php
     DadataTest.php
     DadataControllerTest.php
+  Integration/
+    CurlHttpClientTest.php
 bootstrap.php
 ```
 
@@ -63,12 +68,12 @@ docker compose up app
 
 ## API
 
-| Метод | Путь | Параметр | Описание |
+| Метод | Путь | Параметры | Описание |
 |---|---|---|---|
-| GET | `/inn` | `query` — ИНН | Данные о компании |
-| GET | `/bank` | `query` — БИК | Данные о банке |
-| GET | `/country` | `query` — название | Поиск страны |
-| GET | `/address` | `query` — адрес | Поиск адреса |
+| GET / POST | `/inn` | `query` — ИНН | Данные о компании |
+| GET / POST | `/bank` | `query` — БИК | Данные о банке |
+| GET / POST | `/country` | `query` — название | Поиск страны |
+| GET / POST | `/address` | `query` — адрес, `locations` — фильтр (только POST) | Поиск адреса |
 
 ### Примеры запросов
 
@@ -82,21 +87,45 @@ curl "http://localhost:8080/bank?query=044525225"
 # Поиск страны
 curl "http://localhost:8080/country?query=Росс"
 
-# Поиск адреса
+# Поиск адреса (GET)
 curl "http://localhost:8080/address?query=Москва Ленина"
+
+# Поиск адреса с фильтром по стране (POST)
+curl -X POST "http://localhost:8080/address" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Ленина", "locations": [{"country_iso_code": "RU"}]}'
 ```
+
+### Коды ответа
+
+| Код | Причина |
+|---|---|
+| 200 | Успех |
+| 400 | Не передан параметр `query` |
+| 404 | Неизвестный маршрут |
+| 502 | Ошибка при обращении к Dadata API |
 
 ## Тесты
 
-### Запуск через Docker
+### Юнит-тесты (без сети)
 
 ```bash
+# Через Docker
 docker compose run --rm test
+
+# Локально
+composer install
+./vendor/bin/phpunit --testsuite Unit --testdox
 ```
 
-### Локальный запуск
+### Интеграционные тесты (требуют сеть)
 
 ```bash
-composer install
+./vendor/bin/phpunit --testsuite Integration --testdox
+```
+
+### Все тесты
+
+```bash
 ./vendor/bin/phpunit --testdox
 ```

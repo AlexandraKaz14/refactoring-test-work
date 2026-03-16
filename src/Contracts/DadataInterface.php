@@ -8,7 +8,7 @@ interface DadataInterface
 
     public function getBankDataByBic(string $bic): object|null;
 
-    public function searchCountry(string $country): ?array;
+    public function searchCountry(string $country): array;
 
-    public function searchAddress(string $search, ?array $locations = null): ?array;
+    public function searchAddress(string $search, ?array $locations = null): array;
 }

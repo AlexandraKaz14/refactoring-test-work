@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Integration;
 
 use App\Exceptions\HttpException;
 use App\Http\CurlHttpClient;

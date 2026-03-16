@@ -20,12 +20,12 @@ class DadataController
         return $this->dadata->getBankDataByBic($query);
     }
 
-    public function country(string $query): ?array
+    public function country(string $query): array
     {
         return $this->dadata->searchCountry($query);
     }
 
-    public function address(string $query, ?array $locations = null): ?array
+    public function address(string $query, ?array $locations = null): array
     {
         return $this->dadata->searchAddress($query, $locations);
     }

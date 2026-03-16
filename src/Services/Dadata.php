@@ -29,16 +29,21 @@ class Dadata implements DadataInterface
         return $this->parseFirstSuggestion($result);
     }
 
-    public function searchCountry(string $country): ?array
+    public function searchCountry(string $country): array
     {
         $result = $this->request('suggest/country', ['query' => $country]);
 
         return $this->parseSuggestionValues($result);
     }
 
-    public function searchAddress(string $search, ?array $locations = null): ?array
+    public function searchAddress(string $search, ?array $locations = null): array
     {
-        $result = $this->request('suggest/address', ['query' => $search, 'locations' => $locations]);
+        $data = ['query' => $search];
+        if ($locations !== null) {
+            $data['locations'] = $locations;
+        }
+
+        $result = $this->request('suggest/address', $data);
 
         return $this->parseSuggestionValues($result);
     }
@@ -50,13 +55,9 @@ class Dadata implements DadataInterface
         return count($suggestions) > 0 ? $suggestions[0]->data : null;
     }
 
-    private function parseSuggestionValues(object $result): ?array
+    private function parseSuggestionValues(object $result): array
     {
         $suggestions = $result->suggestions ?? [];
-
-        if (count($suggestions) === 0) {
-            return null;
-        }
 
         return array_map(fn($item) => $item->value ?? null, $suggestions);
     }
@@ -69,8 +70,18 @@ class Dadata implements DadataInterface
             'Authorization: Token ' . $this->apiKey,
         ];
 
-        $response = $this->httpClient->post(self::BASE_URL . $endpoint, json_encode($data), $headers);
+        $encoded = json_encode($data);
+        if ($encoded === false) {
+            throw new \RuntimeException('Failed to encode request data: ' . json_last_error_msg());
+        }
 
-        return json_decode($response) ?? new \stdClass();
+        $response = $this->httpClient->post(self::BASE_URL . $endpoint, $encoded, $headers);
+
+        $decoded = json_decode($response);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Failed to decode API response: ' . json_last_error_msg());
+        }
+
+        return $decoded ?? new \stdClass();
     }
 }

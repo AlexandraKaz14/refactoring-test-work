@@ -10,6 +10,10 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
-$dadata = new Dadata($_ENV['DADATA_API_KEY'] ?? '', new CurlHttpClient());
+if (empty($_ENV['DADATA_API_KEY'])) {
+    throw new \RuntimeException('DADATA_API_KEY is not configured');
+}
+
+$dadata = new Dadata($_ENV['DADATA_API_KEY'], new CurlHttpClient());
 
 return new DadataController($dadata);

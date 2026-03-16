@@ -1,5 +1,7 @@
 <?php
 
+use App\Exceptions\HttpException;
+
 /** @var \App\Http\Controllers\DadataController $controller */
 $controller = require_once __DIR__ . '/../bootstrap.php';
 
@@ -25,11 +27,16 @@ if ($query === '') {
     exit;
 }
 
-$result = match ($path) {
-    '/inn'     => $controller->inn($query),
-    '/bank'    => $controller->bank($query),
-    '/country' => $controller->country($query),
-    '/address' => $controller->address($query, $input['locations'] ?? null),
-};
+try {
+    $result = match ($path) {
+        '/inn'     => $controller->inn($query),
+        '/bank'    => $controller->bank($query),
+        '/country' => $controller->country($query),
+        '/address' => $controller->address($query, $input['locations'] ?? null),
+    };
 
-echo json_encode($result);
+    echo json_encode($result);
+} catch (HttpException $e) {
+    http_response_code(502);
+    echo json_encode(['error' => 'External API error: ' . $e->getMessage()]);
+}
