@@ -2,11 +2,11 @@
 
 namespace App;
 
-use App\Services\Dadata;
+use App\Contracts\DadataInterface;
 
 class DadataController
 {
-    public function __construct(private readonly Dadata $dadata)
+    public function __construct(private readonly DadataInterface $dadata)
     {
     }
 

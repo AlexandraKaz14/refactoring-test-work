@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
+use App\Contracts\DadataInterface;
 use App\Contracts\HttpClientInterface;
 
-class Dadata
+class Dadata implements DadataInterface
 {
     private const BASE_URL = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/';
 

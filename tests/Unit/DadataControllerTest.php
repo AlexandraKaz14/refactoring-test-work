@@ -2,19 +2,19 @@
 
 namespace Tests\Unit;
 
-use App\Services\Dadata;
+use App\Contracts\DadataInterface;
 use App\DadataController;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class DadataControllerTest extends TestCase
 {
-    private Dadata&MockObject $dadata;
+    private DadataInterface&MockObject $dadata;
     private DadataController $controller;
 
     protected function setUp(): void
     {
-        $this->dadata = $this->createMock(Dadata::class);
+        $this->dadata = $this->createMock(DadataInterface::class);
         $this->controller = new DadataController($this->dadata);
     }
 
