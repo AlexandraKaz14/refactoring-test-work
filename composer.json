@@ -1,3 +1,25 @@
 {
-
+    "name": "test/dadata-refactoring",
+    "description": "Dadata API refactoring test task",
+    "type": "project",
+    "require": {
+        "php": "^8.4",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
 }
