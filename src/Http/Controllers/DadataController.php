@@ -10,12 +10,12 @@ class DadataController
     {
     }
 
-    public function inn(string $query): mixed
+    public function inn(string $query): object|null
     {
         return $this->dadata->getCompanyDataByInn($query);
     }
 
-    public function bank(string $query): mixed
+    public function bank(string $query): object|null
     {
         return $this->dadata->getBankDataByBic($query);
     }

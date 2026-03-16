@@ -134,4 +134,29 @@ class DadataTest extends TestCase
 
         $this->assertNull($result);
     }
+
+    public function testSearchAddressPassesLocations(): void
+    {
+        $locations = [['country_iso_code' => 'RU']];
+
+        $response = json_encode([
+            'suggestions' => [
+                ['value' => 'г Москва, ул Ленина, д 1'],
+            ]
+        ]);
+
+        $this->httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->stringContains('suggest/address'),
+                $this->callback(fn($body) => json_decode($body, true)['locations'] === $locations),
+                $this->anything()
+            )
+            ->willReturn($response);
+
+        $result = $this->dadata->searchAddress('Москва', $locations);
+
+        $this->assertIsArray($result);
+        $this->assertContains('г Москва, ул Ленина, д 1', $result);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Contracts\HttpClientInterface;
+use App\Exceptions\HttpException;
 
 class CurlHttpClient implements HttpClientInterface
 {
@@ -25,8 +26,20 @@ class CurlHttpClient implements HttpClientInterface
         ]);
 
         $response = curl_exec($curl);
+
+        if ($response === false) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            throw new HttpException('cURL request failed: ' . $error);
+        }
+
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        return $response ?: '';
+        if ($statusCode < 200 || $statusCode >= 300) {
+            throw new HttpException('Unexpected HTTP status code: ' . $statusCode);
+        }
+
+        return $response;
     }
 }
