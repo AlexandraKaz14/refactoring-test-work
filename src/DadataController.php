@@ -1,24 +1,32 @@
 <?php
 
-use DaDataRu;
+namespace App;
+
+use App\Classes\Dadata;
 
 class DadataController
 {
-    public function inn($request)
+    public function __construct(private readonly Dadata $dadata)
     {
-        $datata = new DaDataRu();
-
-        $bin = $datata->getCompanyDataByInn($request);
-
-        if (!$bin) {
-            return false;
-        }
-
-        return $bin;
     }
 
-    private function bank($request)
+    public function inn(string $query): mixed
     {
-        return $response;
+        return $this->dadata->getCompanyDataByInn($query);
+    }
+
+    public function bank(string $query): mixed
+    {
+        return $this->dadata->getBankDataByBic($query);
+    }
+
+    public function country(string $query): ?array
+    {
+        return $this->dadata->searchCountry($query);
+    }
+
+    public function address(string $query, ?array $locations = null): ?array
+    {
+        return $this->dadata->searchAddress($query, $locations);
     }
 }

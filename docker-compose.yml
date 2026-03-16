@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+      target: app
+    ports:
+      - "8080:8080"
+    env_file:
+      - path: .env
+        required: true
+    volumes:
+      - .:/app
+
+  test:
+    build:
+      context: .
+      target: test
+    env_file:
+      - path: .env
+        required: false
