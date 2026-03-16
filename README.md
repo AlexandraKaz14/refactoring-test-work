@@ -11,7 +11,8 @@
 - Инициализация зависимостей вынесена в `bootstrap.php`
 - Добавлена валидация входящего параметра `query`
 - Поднят Docker-контейнер с PHP 8.4
-- Написаны юнит-тесты (12 тестов, 33 assertions)
+- Добавлена обработка ошибок HTTP-клиента с выбросом `HttpException`
+- Написаны юнит-тесты (15 тестов, 42 assertions)
 
 ## Структура проекта
 
@@ -20,6 +21,8 @@ src/
   Contracts/
     DadataInterface.php
     HttpClientInterface.php
+  Exceptions/
+    HttpException.php
   Http/
     Controllers/
       DadataController.php
@@ -30,6 +33,7 @@ public/
   index.php
 tests/
   Unit/
+    CurlHttpClientTest.php
     DadataTest.php
     DadataControllerTest.php
 bootstrap.php
