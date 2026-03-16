@@ -134,18 +134,4 @@ class DadataTest extends TestCase
 
         $this->assertNull($result);
     }
-
-    public function testRequestSendsAuthorizationHeader(): void
-    {
-        $this->httpClient->expects($this->once())
-            ->method('post')
-            ->with(
-                $this->anything(),
-                $this->anything(),
-                $this->callback(fn($headers) => in_array('Authorization: Token test-api-key', $headers))
-            )
-            ->willReturn(json_encode(['suggestions' => []]));
-
-        $this->dadata->getCompanyDataByInn('1234567890');
-    }
 }

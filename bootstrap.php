@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use App\DadataController;
+use App\Http\Controllers\DadataController;
 use App\Http\CurlHttpClient;
 use App\Services\Dadata;
 use Dotenv\Dotenv;

@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Contracts\DadataInterface;
-use App\DadataController;
+use App\Http\Controllers\DadataController;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 

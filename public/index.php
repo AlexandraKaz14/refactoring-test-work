@@ -1,6 +1,6 @@
 <?php
 
-/** @var \App\DadataController $controller */
+/** @var \App\Http\Controllers\DadataController $controller */
 $controller = require_once __DIR__ . '/../bootstrap.php';
 
 header('Content-Type: application/json');
